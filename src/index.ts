@@ -1,8 +1,8 @@
 import { HtmlTagDescriptor, Plugin } from "vite"
 import { readFileSync, readdirSync } from "fs"
-import { Options, ResolvedOptions } from "./types"
+import { Options } from "./types"
 import { resolveOptions } from "./options"
-import { CreateFilter, createFilter, FilterPattern } from "@rollup/pluginutils"
+import { CreateFilter, createFilter } from "@rollup/pluginutils"
 import path from "path"
 
 // 是否是 svg 文件
@@ -15,8 +15,33 @@ const clearHeightWidth = /(width|height)="([^>+].*?)"/g;
 const clearViewBox = /viewBox="([^>+].*?)"/g;
 // 是否存在视图容器
 const hasViewBox = /(viewBox="[^>+].*?")/g;
+// 填充色替换
+const clearFill = /(fill="[^>+].*?")/g;
+// 是否存在定义内容
+const hasDefs = /(<defs[^>+]*>)(.*)(<\/defs>)/g;
 // 换行正则
 const clearReturn = /(\r)|(\n)/g;
+
+/**
+ * @description: 生成随机字符串
+ * @author: Quarter
+ * @param {number} len 字符串长度
+ * @return {string}
+ */
+const randomString = (len: number = 32): string => {
+  var t = "abcdefhijkmnprstwxyz",
+    a = t.length,
+    n = "";
+  for (let i = 0; i < len; i++) {
+    n += t.charAt(Math.floor(Math.random() * a));
+  }
+  return n
+}
+
+// id 随机字符串
+const randomStr = randomString(6);
+// id 编号
+let counter = 0;
 
 /**
  * @description: 遍历 svg 文件
@@ -38,33 +63,38 @@ const traverseSvgFile = (dir: string, filter: ReturnType<CreateFilter>, prefix: 
       if (dirent.isDirectory()) {
         symbolTags.push(...traverseSvgFile(filePath, filter, prefix, joiner));
       } else if (isSvg.test(filePath)) {
-        const id = `#${prefix}-${dirent.name.replace(/\.svg$/g, "").replace(/[_\-*&^%$#@!=+\[\]<>,.]+/g, joiner)}`;
+        const id = `${prefix}-${dirent.name.toLowerCase().replace(/\.svg$/g, "").replace(/[_\-*&^%$#@!=+\[\]<>,.]+/g, joiner)}`;
         let viewBox = "";
-        const svgStr = readFileSync(filePath)
+        let svgStr = readFileSync(filePath)
           .toString()
-          .replace(clearReturn, "")
-          .replace(svgTitle, ($1: string, $2: string) => {
-            let width = "0";
-            let height = "0";
-            $2.replace(clearHeightWidth, (s1: string, s2: string, s3: string) => {
-              if (s2 === "width") {
-                width = s3;
-              } else if (s2 === "height") {
-                height = s3;
-              }
-              return "";
-            }
-            )
-            $2.replace(clearViewBox, (s1: string, s2: string) => {
-              viewBox = s2;
-              return "";
-            })
-            if (!hasViewBox.test($2)) {
-              viewBox = `0 0 ${width} ${height}`;
+          .replace(clearReturn, "");
+        if (hasDefs.test(svgStr)) {
+          console.warn(`Jump over ${filePath} for <defs> tag`);
+          continue;
+        }
+        svgStr = svgStr.replace(svgTitle, (_: string, $2: string) => {
+          let width = "0";
+          let height = "0";
+          $2.replace(clearHeightWidth, (_: string, s2: string, s3: string) => {
+            if (s2 === "width") {
+              width = s3;
+            } else if (s2 === "height") {
+              height = s3;
             }
             return "";
+          }
+          )
+          $2.replace(clearViewBox, (_: string, s2: string) => {
+            viewBox = s2;
+            return "";
           })
+          if (!hasViewBox.test($2)) {
+            viewBox = `0 0 ${width} ${height}`;
+          }
+          return "";
+        })
           .replace("</svg>", "")
+          .replace(clearFill, `fill="currentColor"`);
         symbolTags.push({
           tag: "symbol",
           attrs: {
@@ -74,7 +104,7 @@ const traverseSvgFile = (dir: string, filter: ReturnType<CreateFilter>, prefix: 
             xmlns: "http://www.w3.org/2000/svg",
           },
           children: svgStr,
-        })
+        });
       }
     }
   }
@@ -103,7 +133,12 @@ const SvgSprite = (options: Options = {}): Plugin => {
             "xmlns:xlink": "http://www.w3.org/1999/xlink",
             style: "width: 0; height: 0; position: absolute; visibility: hidden",
           },
-          children: symbolTags,
+          children: [
+            {
+              tag: "defs",
+              children: symbolTags,
+            }
+          ],
           injectTo: "body-prepend",
         }
       ];
