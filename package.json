@@ -1,6 +1,6 @@
 {
   "name": "@unmian/vite-plugin-svg",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Vite plugin for svg sprite",
   "keywords": [
     "svg",
@@ -35,8 +35,8 @@
     "lint": "f2elint scan",
     "test": "vitest run",
     "prepublishOnly": "tsup src/index.ts --dts --format cjs,esm",
-    "publish:private": "pnpm publish --registry https://npm.lescity.com.cn/",
-    "unpublish:private": "pnpm unpublish --force --registry https://npm.lescity.com.cn/"
+    "publish:private": "pnpm publish --registry https://gitea.lescity.com.cn/api/packages/Quarter/npm/",
+    "unpublish:private": "pnpm unpublish --force https://gitea.lescity.com.cn/api/packages/Quarter/npm/"
   },
   "peerDependencies": {
     "vite": "3.0.9"
