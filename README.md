@@ -1,50 +1,49 @@
-# @quarter/vite-plugin-svg
+# @unmian/vite-plugin-svg
 
-SVG Icon Plugin for Vite
+> 生成 SVG 精灵图的 Vite 插件
 
-- Transform svg file as svg sprite
+## 安装
 
-## Install
+配置私有仓库
 
-Config repository
-
-```
+```txt
 // .yarnrc
-"@quarter:registry" "https://npm.lescity.com.cn/"
+"@unmian:registry" "https://npm.lescity.com.cn/"
 
 //.npmrc
-@quarter:registry=https://npm.lescity.com.cn/
+@unmian:registry=https://npm.lescity.com.cn/
 ```
 
-Install
+安装依赖
 
-```bash
+```shell
 # npm
-npm i @quarter/vite-plugin-svg -D
+npm i -D @unmian/vite-plugin-svg
 # yarn
-yarn add @quarter/vite-plugin-svg -D
+yarn add -D @unmian/vite-plugin-svg
+# pnpm
+pnpm install -D @unmian/vite-plugin-svg
 ```
 
-Add it to `vite.config.js`
+修改配置文件并引入
 
 ```ts
 // vite.config.js
-import Vue from "@vitejs/plugin-vue";
-import SvgSprite from "@quarter/vite-plugin-svg";
+import SvgSprite from "@unmian/vite-plugin-svg";
 
 export default {
   plugins: [
     SvgSprite({
-      include: [ "icons/**" ],
+      include: ["icons/**"],
     }),
   ],
-}
+};
 ```
 
-## Options
+## 可选配置项
 
-See [the tsdoc](./src/types.ts) for more advanced options
+查看 [TS 声明文档](./src/types.ts) 来了解更多可选配置项的相关信息
 
-## License
+## 许可
 
 MIT License © 2022-PRESENT [Quarter](https://github.com/unmian)

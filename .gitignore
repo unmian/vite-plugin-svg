@@ -51,6 +51,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+/lib
+/types
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -279,6 +281,7 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 dist/
+target/
 /docs/
 
 # Visual Studio 6 build log
@@ -470,5 +473,6 @@ pnpm-debug.log*
 *.sw?
 
 # node 文件
+pnpm-lock.yaml
 package-lock.json
 yarn.lock
