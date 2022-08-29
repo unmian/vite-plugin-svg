@@ -2,12 +2,12 @@
  * @Author: Quarter
  * @Date: 2022-08-27 10:57:56
  * @LastEditors: Quarter
- * @LastEditTime: 2022-08-27 15:40:34
+ * @LastEditTime: 2022-08-29 17:37:01
  * @FilePath: /vite-plugin-svg/src/svg-info-check.ts
  * @Description: SVG 信息检查
  */
 
-import { Word } from "@unmian/universal-utils";
+import { Word } from "@unmian/universal-utils-node";
 import { parse, Node, ElementNode } from "svg-parser";
 
 export interface Attrs {
@@ -128,6 +128,7 @@ export const svgToElement = (
   }
   return svgElements[0];
 };
+
 /**
  * @description: 渲染节点
  * @param {IconElement} node
