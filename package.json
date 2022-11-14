@@ -35,8 +35,8 @@
     "lint": "f2elint scan",
     "test": "vitest run",
     "prepublishOnly": "tsup src/index.ts --dts --format cjs,esm",
-    "publish:private": "pnpm publish --no-git-checks --registry https://gitea.lescity.com.cn/api/packages/Quarter/npm/",
-    "unpublish:private": "pnpm unpublish --force https://gitea.lescity.com.cn/api/packages/Quarter/npm/"
+    "publish:private": "pnpm publish --no-git-checks --registry https://npm.lescity.com.cn",
+    "unpublish:private": "pnpm unpublish --force https://npm.lescity.com.cn"
   },
   "peerDependencies": {
     "vite": "3.0.9"
@@ -58,7 +58,7 @@
     "vitest": "0.22.1"
   },
   "dependencies": {
-    "@unmian/universal-utils-node": "^0.5.0",
+    "@unmian/universal-utils-node": "^0.5.4",
     "svg-parser": "^2.0.4",
     "svg-sprite": "^1.5.4",
     "svgo": "^2.8.0"
